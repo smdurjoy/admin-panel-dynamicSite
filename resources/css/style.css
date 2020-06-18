@@ -45,4 +45,22 @@
     display: none;
 }
 
+/*wentWrong component*/
+.wentWrongImage {
+    height: 200px;
+    width: 30%;
+    margin-top: 1rem;
+}
+
+.wentWrong h3{
+    font-size: 30px;
+    font-weight: 900;
+    font-family: 'Jost', sans-serif;
+}
+
+.wentWrong h3 span{
+    color: red;
+    font-family: 'Jost', sans-serif;
+}
+
 

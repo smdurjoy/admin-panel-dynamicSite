@@ -1,8 +1,8 @@
 import React, {Component, Fragment} from 'react';
-import {Navbar} from "react-bootstrap";
+import {Navbar, NavLink} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars, faHome} from "@fortawesome/free-solid-svg-icons";
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 class MainLayout extends Component {
     constructor(props) {
@@ -32,12 +32,12 @@ class MainLayout extends Component {
                 </Navbar>
 
                 <div className={this.state.sideNavClass}>
-                    <NavLink className="p-2 my-0 text-white" to="/"> <FontAwesomeIcon icon={faHome}/> Home</NavLink>
-                    <NavLink className="p-2 my-0 text-white" to="/courses"> <FontAwesomeIcon icon={faHome}/> Courses</NavLink>
-                    <NavLink className="p-2 my-0 text-white" to="/projects"> <FontAwesomeIcon icon={faHome}/> Projects</NavLink>
-                    <NavLink className="p-2 my-0 text-white" to="/services"> <FontAwesomeIcon icon={faHome}/> Services</NavLink>
-                    <NavLink className="p-2 my-0 text-white" to="/clientReview"> <FontAwesomeIcon icon={faHome}/> Client Review</NavLink>
-                    <NavLink className="p-2 my-0 text-white" to="/contact"> <FontAwesomeIcon icon={faHome}/> Contact</NavLink>
+                    <NavLink> <Link className="p-2 my-0 text-white" to="/"> <FontAwesomeIcon icon={faHome}/> Home</Link> </NavLink>
+                    <NavLink> <Link className="p-2 my-0 text-white" to="/courses"> <FontAwesomeIcon icon={faHome}/> Courses</Link> </NavLink>
+                    <NavLink> <Link className="p-2 my-0 text-white" to="/projects"> <FontAwesomeIcon icon={faHome}/> Projects</Link> </NavLink>
+                    <NavLink> <Link className="p-2 my-0 text-white" to="/services"> <FontAwesomeIcon icon={faHome}/> Services</Link> </NavLink>
+                    <NavLink> <Link className="p-2 my-0 text-white" to="/clientReview"> <FontAwesomeIcon icon={faHome}/> Client Review</Link> </NavLink>
+                    <NavLink> <Link className="p-2 my-0 text-white" to="/contact"> <FontAwesomeIcon icon={faHome}/> Contact</Link> </NavLink>
                 </div>
 
                 <div onClick={this.showHideSideNav} className={this.state.mainOverlay}>
@@ -45,9 +45,7 @@ class MainLayout extends Component {
                 </div>
 
                 <div className="mt-5">
-                    <div className="container">
-                        {this.props.children}
-                    </div>
+                    {this.props.children}
                 </div>
             </Fragment>
         );

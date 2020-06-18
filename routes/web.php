@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/contactData', 'ContactController@getContactData');
+Route::post('/contactDelete', 'ContactController@onContactDelete');
+
 Route::get('/', function () {
     return view('index');
 });
+
+Route::get('{FrontEndRoute}', function () {
+    return view('index');
+})->where('FrontEndRoute', '.*');
