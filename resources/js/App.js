@@ -1,11 +1,14 @@
-import React from 'react';
-import Test from "./components/test";
+import React, {Fragment} from 'react';
+import {BrowserRouter} from "react-router-dom";
+import AppRoute from "./routes/AppRoute";
 
 function App() {
     return (
-        <div>
-            <Test />
-        </div>
+        <Fragment>
+            <BrowserRouter>
+                <AppRoute/>
+            </BrowserRouter>
+        </Fragment>
     );
 }
 

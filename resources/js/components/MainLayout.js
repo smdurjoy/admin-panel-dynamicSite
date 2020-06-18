@@ -1,0 +1,57 @@
+import React, {Component, Fragment} from 'react';
+import {Navbar} from "react-bootstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faBars, faHome} from "@fortawesome/free-solid-svg-icons";
+import {NavLink} from "react-router-dom";
+
+class MainLayout extends Component {
+    constructor(props) {
+        super();
+        this.state = {
+            sideNav: false,
+            sideNavClass: "sideNavClose",
+            mainOverlay: "overlayClose"
+        }
+
+        this.showHideSideNav = this.showHideSideNav.bind(this);
+    }
+
+    showHideSideNav () {
+        if(this.state.sideNav == false) {
+            this.setState({sideNav: true, sideNavClass: "sideNavOpen", mainOverlay: "overlayOpen"})
+        } else {
+            this.setState({sideNav: false, sideNavClass: "sideNavClose", mainOverlay: "overlayClose"})
+        }
+    }
+
+    render() {
+        return (
+            <Fragment>
+                <Navbar expand="lg" className="fixed-top" variant="light" bg="light">
+                    <Navbar.Brand href="#" onClick={this.showHideSideNav}> <FontAwesomeIcon icon={faBars}/> </Navbar.Brand>
+                </Navbar>
+
+                <div className={this.state.sideNavClass}>
+                    <NavLink className="p-2 my-0 text-white" to="/"> <FontAwesomeIcon icon={faHome}/> Home</NavLink>
+                    <NavLink className="p-2 my-0 text-white" to="/courses"> <FontAwesomeIcon icon={faHome}/> Courses</NavLink>
+                    <NavLink className="p-2 my-0 text-white" to="/projects"> <FontAwesomeIcon icon={faHome}/> Projects</NavLink>
+                    <NavLink className="p-2 my-0 text-white" to="/services"> <FontAwesomeIcon icon={faHome}/> Services</NavLink>
+                    <NavLink className="p-2 my-0 text-white" to="/clientReview"> <FontAwesomeIcon icon={faHome}/> Client Review</NavLink>
+                    <NavLink className="p-2 my-0 text-white" to="/contact"> <FontAwesomeIcon icon={faHome}/> Contact</NavLink>
+                </div>
+
+                <div onClick={this.showHideSideNav} className={this.state.mainOverlay}>
+
+                </div>
+
+                <div className="mt-5">
+                    <div className="container">
+                        {this.props.children}
+                    </div>
+                </div>
+            </Fragment>
+        );
+    }
+}
+
+export default MainLayout;
