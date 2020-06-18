@@ -33,6 +33,7 @@
         "react-bootstrap-table-next": "^4.0.3",
         "react-bootstrap-table2-paginator": "^2.1.2",
         "react-router": "^5.2.0",
-        "react-router-dom": "^5.2.0"
+        "react-router-dom": "^5.2.0",
+        "sweetalert2": "^9.15.1"
     }
 }

@@ -16,9 +16,9 @@ class ContactController extends Controller
         $id = $request->input('id');
         $result = ContactModel::where('id', $id)->delete();
         if($result == true) {
-            return 'Contact Delete Successfully';
+            return 1;
         } else {
-            return 'Delete Failed';
+            return 0;
         }
     }
 }
