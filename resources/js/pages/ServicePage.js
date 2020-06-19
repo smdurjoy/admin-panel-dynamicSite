@@ -109,7 +109,7 @@ class ServicePage extends Component {
                         <Container>
                             <Row>
                                 <Col lg={12} md={12} sm={12}>
-                                    <h1 className=" text-center mt-5">Client Review</h1>
+                                    <h1 className=" text-center mt-5">Services</h1>
                                     <Button className="btn btn-dark my-2" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
                                     <BootstrapTable
                                         keyField='id'

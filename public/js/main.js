@@ -74855,6 +74855,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_MainLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/MainLayout */ "./resources/js/components/MainLayout.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+/* harmony import */ var _components_Loading__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Loading */ "./resources/js/components/Loading.js");
+/* harmony import */ var _components_WentWrong__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/WentWrong */ "./resources/js/components/WentWrong.js");
+/* harmony import */ var react_bootstrap_table_next__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap-table-next */ "./node_modules/react-bootstrap-table-next/lib/index.js");
+/* harmony import */ var react_bootstrap_table_next__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap_table_next__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_bootstrap_table2_paginator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap-table2-paginator */ "./node_modules/react-bootstrap-table2-paginator/lib/index.js");
+/* harmony import */ var react_bootstrap_table2_paginator__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap_table2_paginator__WEBPACK_IMPORTED_MODULE_8__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -74880,21 +74891,182 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+
+
+
+
+
+
 var CoursePage = /*#__PURE__*/function (_Component) {
   _inherits(CoursePage, _Component);
 
   var _super = _createSuper(CoursePage);
 
   function CoursePage() {
+    var _this;
+
     _classCallCheck(this, CoursePage);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this);
+    _this.state = {
+      dataList: [],
+      isLoading: true,
+      isError: false,
+      selectRowId: '',
+      deleteBtnText: 'Delete'
+    };
+    _this.deleteRow = _this.deleteRow.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(CoursePage, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/courseData').then(function (response) {
+        if (response.status == 200) {
+          _this2.setState({
+            dataList: response.data,
+            isLoading: false
+          });
+        } else {
+          _this2.setState({
+            isLoading: false,
+            isError: true
+          });
+        }
+      })["catch"](function (error) {
+        _this2.setState({
+          isLoading: false,
+          isError: true
+        });
+      });
+    }
+  }, {
+    key: "deleteRow",
+    value: function deleteRow() {
+      var _this3 = this;
+
+      if (this.state.selectRowId == '') {
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire('Please select a row for delete!');
+      } else {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+          if (result.value) {
+            _this3.setState({
+              deleteBtnText: "Deleting..."
+            });
+
+            axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/courseDelete', {
+              id: _this3.state.selectRowId
+            }).then(function (response) {
+              if (response.data == 1 && response.status == 200) {
+                _this3.setState({
+                  deleteBtnText: "Delete Success"
+                });
+
+                setTimeout(function () {
+                  this.setState({
+                    deleteBtnText: "Delete"
+                  });
+                }.bind(_this3), 2000);
+
+                _this3.componentDidMount();
+              } else {
+                _this3.setState({
+                  deleteBtnText: "Delete Failed"
+                });
+              }
+            })["catch"](function (error) {
+              _this3.setState({
+                deleteBtnText: "Delete Failed"
+              });
+            });
+          }
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MainLayout__WEBPACK_IMPORTED_MODULE_1__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Hello form course page")));
+      var _this4 = this;
+
+      console.log(this.state.dataList);
+
+      if (this.state.isLoading == true) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MainLayout__WEBPACK_IMPORTED_MODULE_1__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loading__WEBPACK_IMPORTED_MODULE_5__["default"], null)));
+      } else if (this.state.isError == true) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MainLayout__WEBPACK_IMPORTED_MODULE_1__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_WentWrong__WEBPACK_IMPORTED_MODULE_6__["default"], null)));
+      } else {
+        var data = this.state.dataList;
+        var columns = [{
+          dataField: "id",
+          text: "ID"
+        }, {
+          dataField: "short_title",
+          text: "Short Title"
+        }, {
+          dataField: "short_des",
+          text: "Short Description"
+        }, {
+          dataField: "short_img",
+          text: "Short Image"
+        }, {
+          dataField: "long_title",
+          text: "Long Title"
+        }, {
+          dataField: "long_des",
+          text: "Long Description"
+        }, {
+          dataField: "total_lecture",
+          text: "Total Lecture"
+        }, {
+          dataField: "total_students",
+          text: "Total Students"
+        }, {
+          dataField: "skill_all",
+          text: "Skill All"
+        }, {
+          dataField: "video_url",
+          text: "Video Url"
+        }, {
+          dataField: "course_link",
+          text: "Course Link"
+        }];
+        var selectRow = {
+          mode: "radio",
+          onSelect: function onSelect(row) {
+            _this4.setState({
+              selectRowId: row['id']
+            });
+          }
+        };
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MainLayout__WEBPACK_IMPORTED_MODULE_1__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Row"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Col"], {
+          lg: 12,
+          md: 12,
+          sm: 12
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+          className: " text-center mt-5"
+        }, "Services"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
+          className: "btn btn-dark my-2",
+          onClick: this.deleteRow
+        }, this.state.deleteBtnText), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_table_next__WEBPACK_IMPORTED_MODULE_7___default.a, {
+          keyField: "id",
+          data: data,
+          columns: columns,
+          pagination: react_bootstrap_table2_paginator__WEBPACK_IMPORTED_MODULE_8___default()(),
+          selectRow: selectRow
+        }))))));
+      }
     }
   }]);
 
@@ -74979,6 +75151,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_MainLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/MainLayout */ "./resources/js/components/MainLayout.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+/* harmony import */ var _components_Loading__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Loading */ "./resources/js/components/Loading.js");
+/* harmony import */ var _components_WentWrong__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/WentWrong */ "./resources/js/components/WentWrong.js");
+/* harmony import */ var react_bootstrap_table_next__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap-table-next */ "./node_modules/react-bootstrap-table-next/lib/index.js");
+/* harmony import */ var react_bootstrap_table_next__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap_table_next__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_bootstrap_table2_paginator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap-table2-paginator */ "./node_modules/react-bootstrap-table2-paginator/lib/index.js");
+/* harmony import */ var react_bootstrap_table2_paginator__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_bootstrap_table2_paginator__WEBPACK_IMPORTED_MODULE_8__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -75004,21 +75187,165 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+
+
+
+
+
+
 var ProjectPage = /*#__PURE__*/function (_Component) {
   _inherits(ProjectPage, _Component);
 
   var _super = _createSuper(ProjectPage);
 
   function ProjectPage() {
+    var _this;
+
     _classCallCheck(this, ProjectPage);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this);
+    _this.state = {
+      dataList: [],
+      isLoading: true,
+      isError: false,
+      selectRowId: '',
+      deleteBtnText: 'Delete'
+    };
+    _this.deleteRow = _this.deleteRow.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(ProjectPage, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/projectData').then(function (response) {
+        if (response.status == 200) {
+          _this2.setState({
+            dataList: response.data,
+            isLoading: false
+          });
+        } else {
+          _this2.setState({
+            isLoading: false,
+            isError: true
+          });
+        }
+      })["catch"](function (error) {
+        _this2.setState({
+          isLoading: false,
+          isError: true
+        });
+      });
+    }
+  }, {
+    key: "deleteRow",
+    value: function deleteRow() {
+      var _this3 = this;
+
+      if (this.state.selectRowId == '') {
+        return sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire('Please select a row for delete!');
+      } else {
+        sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+          if (result.value) {
+            _this3.setState({
+              deleteBtnText: "Deleting..."
+            });
+
+            axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/projectDelete', {
+              id: _this3.state.selectRowId
+            }).then(function (response) {
+              if (response.data == 1 && response.status == 200) {
+                _this3.setState({
+                  deleteBtnText: "Delete Success"
+                });
+
+                setTimeout(function () {
+                  this.setState({
+                    deleteBtnText: "Delete"
+                  });
+                }.bind(_this3), 2000);
+
+                _this3.componentDidMount();
+              } else {
+                _this3.setState({
+                  deleteBtnText: "Delete Failed"
+                });
+              }
+            })["catch"](function (error) {
+              _this3.setState({
+                deleteBtnText: "Delete Failed"
+              });
+            });
+          }
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MainLayout__WEBPACK_IMPORTED_MODULE_1__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Hello form project page")));
+      var _this4 = this;
+
+      if (this.state.isLoading == true) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MainLayout__WEBPACK_IMPORTED_MODULE_1__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loading__WEBPACK_IMPORTED_MODULE_5__["default"], null)));
+      } else if (this.state.isError == true) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MainLayout__WEBPACK_IMPORTED_MODULE_1__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_WentWrong__WEBPACK_IMPORTED_MODULE_6__["default"], null)));
+      } else {
+        var data = this.state.dataList;
+        var columns = [{
+          dataField: "id",
+          text: "ID"
+        }, {
+          dataField: "project_name",
+          text: "Project Name"
+        }, {
+          dataField: "short_description",
+          text: "Short Description"
+        }, {
+          dataField: "project_features",
+          text: "Project Features"
+        }, {
+          dataField: "image_one",
+          text: "Image One"
+        }, {
+          dataField: "image_two",
+          text: "Image Two"
+        }];
+        var selectRow = {
+          mode: "radio",
+          onSelect: function onSelect(row) {
+            _this4.setState({
+              selectRowId: row['id']
+            });
+          }
+        };
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MainLayout__WEBPACK_IMPORTED_MODULE_1__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Row"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Col"], {
+          lg: 12,
+          md: 12,
+          sm: 12
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+          className: " text-center mt-5"
+        }, "Services"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
+          className: "btn btn-dark my-2",
+          onClick: this.deleteRow
+        }, this.state.deleteBtnText), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_table_next__WEBPACK_IMPORTED_MODULE_7___default.a, {
+          keyField: "id",
+          data: data,
+          columns: columns,
+          pagination: react_bootstrap_table2_paginator__WEBPACK_IMPORTED_MODULE_8___default()(),
+          selectRow: selectRow
+        }))))));
+      }
     }
   }]);
 
@@ -75221,7 +75548,7 @@ var ServicePage = /*#__PURE__*/function (_Component) {
           sm: 12
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
           className: " text-center mt-5"
-        }, "Client Review"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
+        }, "Services"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
           className: "btn btn-dark my-2",
           onClick: this.deleteRow
         }, this.state.deleteBtnText), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_table_next__WEBPACK_IMPORTED_MODULE_7___default.a, {
