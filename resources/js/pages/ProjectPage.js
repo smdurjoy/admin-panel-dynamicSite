@@ -7,6 +7,7 @@ import Loading from "../components/Loading";
 import WentWrong from "../components/WentWrong";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import {Link} from "react-router-dom";
 
 class ProjectPage extends Component {
     constructor() {
@@ -18,7 +19,6 @@ class ProjectPage extends Component {
             selectRowId: '',
             deleteBtnText: 'Delete',
             showHide: "d-none",
-            proF: ""
         }
 
         this.deleteRow = this.deleteRow.bind(this)
@@ -28,7 +28,7 @@ class ProjectPage extends Component {
     componentDidMount() {
         Axios.get('/projectData').then((response) => {
             if(response.status == 200) {
-                this.setState({dataList: response.data, isLoading: false, proF: response.data['project_features']})
+                this.setState({dataList: response.data, isLoading: false})
             } else {
                 this.setState({isLoading: false, isError: true})
             }
@@ -73,7 +73,7 @@ class ProjectPage extends Component {
     }
 
     imgCellFormat(cell) {
-        return <img className="w-75" src={cell}/>
+        return <img className="tableImage" src={cell}/>
     }
 
     render() {
@@ -114,10 +114,20 @@ class ProjectPage extends Component {
                     <MainLayout title="Project">
                         <Container>
                             <Row>
+                                <Col md={4} lg={4} sm={4}>
+                                    <Button className="btn btn-dark mt-5" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
+                                </Col>
+                                <Col md={4} lg={4} sm={4}>
+                                    <h1 className=" text-center titleText mt-5">Projects</h1>
+                                </Col>
+                                <Col md={4} lg={4} sm={4}>
+                                    <h1 className="desText float-right mt-5">
+                                        <Link to='/' className="pageLink">Home</Link> / <Link to='/projects' className="pageLink">Projects</Link>
+                                    </h1>
+                                </Col>
+                            </Row>
+                            <Row className="mt-3">
                                 <Col lg={12} md={12} sm={12}>
-                                    <h1 className=" text-center mt-5">Projects</h1>
-                                    <div className={this.state.showHide}>Ami show hide div</div>
-                                    <Button className="btn btn-dark my-2" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
                                     <BootstrapTable
                                         keyField='id'
                                         data={ data }

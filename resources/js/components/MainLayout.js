@@ -1,8 +1,17 @@
 import React, {Component, Fragment} from 'react';
-import {Button, Navbar, NavLink} from "react-bootstrap";
+import {Button, Navbar} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBars, faHome} from "@fortawesome/free-solid-svg-icons";
-import {Link} from "react-router-dom";
+import {
+    faAddressBook,
+    faAmericanSignLanguageInterpreting,
+    faBars,
+    faComments,
+    faHome,
+    faLaptopCode,
+    faSortDown,
+    faWindowRestore
+} from "@fortawesome/free-solid-svg-icons";
+import {Link, NavLink} from "react-router-dom";
 
 class MainLayout extends Component {
     constructor(props) {
@@ -10,7 +19,8 @@ class MainLayout extends Component {
         this.state = {
             sideNav: false,
             sideNavClass: "sideNavClose",
-            mainOverlay: "overlayClose"
+            mainOverlay: "overlayClose",
+            activeNavClass: ""
         }
 
         this.showHideSideNav = this.showHideSideNav.bind(this);
@@ -28,20 +38,21 @@ class MainLayout extends Component {
         return (
             <Fragment>
                 <title>{this.props.title}</title>
-                <Navbar expand="lg" className="fixed-top" variant="light" bg="light">
+                <Navbar expand="lg" className="fixed-top navBar" variant="light" bg="light">
                     <Navbar.Brand href="#" onClick={this.showHideSideNav}> <FontAwesomeIcon icon={faBars}/> </Navbar.Brand>
-                    <Link className="btn btn-dark ml-auto">Logout</Link>
+                    <h6 className="ml-auto"> Welcome Admin <FontAwesomeIcon icon={faSortDown}/></h6>
                 </Navbar>
 
                 <div className={this.state.sideNavClass}>
-                    <NavLink> <Link className="p-2 my-0 text-white" to="/"> <FontAwesomeIcon icon={faHome}/> Home</Link> </NavLink>
-                    <NavLink> <Link className="p-2 my-0 text-white" to="/courses"> <FontAwesomeIcon icon={faHome}/> Courses</Link> </NavLink>
-                    <NavLink> <Link className="p-2 my-0 text-white" to="/projects"> <FontAwesomeIcon icon={faHome}/> Projects</Link> </NavLink>
-                    <NavLink> <Link className="p-2 my-0 text-white" to="/services"> <FontAwesomeIcon icon={faHome}/> Services</Link> </NavLink>
-                    <NavLink> <Link className="p-2 my-0 text-white" to="/clientReview"> <FontAwesomeIcon icon={faHome}/> Client Review</Link> </NavLink>
-                    <NavLink> <Link className="p-2 my-0 text-white" to="/contact"> <FontAwesomeIcon icon={faHome}/> Contact</Link> </NavLink>
+                    <div className="navDiv">
+                         <NavLink className="p-2 my-0 navItem" exact to="/" activeStyle={{ background: '#f8f9fa', color:'#1b1e21' }}> <FontAwesomeIcon icon={faHome}/> Home</NavLink>
+                         <NavLink className="p-2 my-0 navItem" exact to="/courses" activeStyle={{ background: '#f8f9fa', color:'#1b1e21' }}> <FontAwesomeIcon icon={faLaptopCode}/> Courses</NavLink>
+                         <NavLink className="p-2 my-0 navItem" exact to="/projects" activeStyle={{ background: '#f8f9fa', color:'#1b1e21' }}> <FontAwesomeIcon icon={faWindowRestore}/> Projects</NavLink>
+                         <NavLink className="p-2 my-0 navItem" exact to="/services" activeStyle={{ background: '#f8f9fa', color:'#1b1e21' }}> <FontAwesomeIcon icon={faAmericanSignLanguageInterpreting}/> Services</NavLink>
+                         <NavLink className="p-2 my-0 navItem" exact to="/clientReview" activeStyle={{ background: '#f8f9fa', color:'#1b1e21' }}> <FontAwesomeIcon icon={faComments}/> Client Review</NavLink>
+                         <NavLink className="p-2 my-0 navItem" exact to="/contact" activeStyle={{ background: '#f8f9fa', color:'#1b1e21' }}> <FontAwesomeIcon icon={faAddressBook}/> Contact</NavLink>
+                    </div>
                 </div>
-
                 <div onClick={this.showHideSideNav} className={this.state.mainOverlay}>
 
                 </div>

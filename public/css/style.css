@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+body {
+    color: #1b1e21;
+}
+
 .sideNavClose {
     height: 100%;
     width: 0;
@@ -65,7 +69,46 @@
 
 .card:hover {
     border: none !important;
-    box-shadow: 0 0 6px 0 rgba(240, 240, 240, 1);
+    box-shadow: 0 0 10px 0 rgba(240, 240, 240, 1);
+}
+
+.navDiv {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+}
+
+.navItem {
+    color: #f8f9fa;
+    font-family: 'Jost', sans-serif;
+    font-size: 16px;
+    margin: 10px;
+    margin-top: 5px !important;
+    transition: 0.2s;
+}
+
+.navItem:hover {
+    background: #f8f9fa;
+    color: #1b1e21;
+    text-decoration: none;
+}
+
+.tableImage {
+    width: 150px;
+    height: 100px;
+}
+
+.pageLink {
+    color: #1b1e21;
+    text-decoration: none;
+}
+
+.pageLink:hover {
+    color: #111111;
+}
+
+.navBar {
+    box-shadow: 0 0 6px 0 rgb(227, 227, 227);
 }
 
 /*wentWrong component*/

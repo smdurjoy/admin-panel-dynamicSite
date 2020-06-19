@@ -4,6 +4,7 @@ import {Card, Col, Container, Row} from "react-bootstrap";
 import Axios from "axios";
 import Loading from "../components/Loading";
 import WentWrong from "../components/WentWrong";
+import {Link} from "react-router-dom";
 
 class HomePage extends Component {
     constructor() {
@@ -51,6 +52,16 @@ class HomePage extends Component {
                 <Fragment>
                     <MainLayout title="Home">
                         <Container className="mt-4">
+                            <Row>
+                                <Col md={6} lg={6} sm={6}>
+                                    <h1 className="titleText mt-5 float-left">Dashboard</h1>
+                                </Col>
+                                <Col md={6} lg={6} sm={6}>
+                                    <h1 className="desText float-right mt-5">
+                                        <Link to='/' className="pageLink">Home</Link>
+                                    </h1>
+                                </Col>
+                            </Row>
                             <Row>
                                 <Col className="p-2" lg={3} md={3} sm={12}>
                                     <Card>

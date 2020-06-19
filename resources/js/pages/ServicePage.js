@@ -7,6 +7,7 @@ import Loading from "../components/Loading";
 import WentWrong from "../components/WentWrong";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
+import {Link} from "react-router-dom";
 
 class ServicePage extends Component {
     constructor() {
@@ -71,12 +72,11 @@ class ServicePage extends Component {
     }
 
     imgCellFormat(cell) {
-        return <img className="w-75" src={cell}/>
+        return <img className="tableImage" src={cell}/>
     }
 
 
     render() {
-        console.log(this.state.dataList)
         if(this.state.isLoading == true) {
             return(
                 <MainLayout title="Service">
@@ -114,9 +114,20 @@ class ServicePage extends Component {
                     <MainLayout title="Service">
                         <Container>
                             <Row>
+                                <Col md={4} lg={4} sm={4}>
+                                    <Button className="btn btn-dark mt-5" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
+                                </Col>
+                                <Col md={4} lg={4} sm={4}>
+                                    <h1 className=" text-center titleText mt-5">Services</h1>
+                                </Col>
+                                <Col md={4} lg={4} sm={4}>
+                                    <h1 className="desText float-right mt-5">
+                                        <Link to='/' className="pageLink">Home</Link> / <Link to='/services' className="pageLink">Services</Link>
+                                    </h1>
+                                </Col>
+                            </Row>
+                            <Row className="mt-3">
                                 <Col lg={12} md={12} sm={12}>
-                                    <h1 className=" text-center mt-5">Services</h1>
-                                    <Button className="btn btn-dark my-2" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
                                     <BootstrapTable
                                         keyField='id'
                                         data={ data }

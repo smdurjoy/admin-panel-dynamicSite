@@ -72,7 +72,7 @@ class CoursePage extends Component {
     }
 
     imgCellFormat(cell) {
-        return <img className="w-75" src={cell}/>
+        return <img className="tableImage" src={cell}/>
     }
 
     render() {
@@ -116,8 +116,20 @@ class CoursePage extends Component {
                     <MainLayout title="Course">
                         <Container>
                             <Row>
+                                <Col md={4} lg={4} sm={4}>
+                                    <Button className="btn btn-dark mt-5" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
+                                </Col>
+                                <Col md={4} lg={4} sm={4}>
+                                    <h1 className="text-center titleText mt-5">Courses</h1>
+                                </Col>
+                                <Col md={4} lg={4} sm={4}>
+                                    <h1 className="desText float-right mt-5">
+                                        <Link to='/' className="pageLink">Home</Link> / <Link to='/courses' className="pageLink">Courses</Link>
+                                    </h1>
+                                </Col>
+                            </Row>
+                            <Row className="mt-3">
                                 <Col lg={12} md={12} sm={12}>
-                                    <h1 className="text-center mt-5 titleText">Courses</h1>
                                     <BootstrapTable
                                         keyField='id'
                                         data={ data }
