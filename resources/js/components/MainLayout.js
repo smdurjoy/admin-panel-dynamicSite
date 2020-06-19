@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {Navbar, NavLink} from "react-bootstrap";
+import {Button, Navbar, NavLink} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars, faHome} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
@@ -27,8 +27,10 @@ class MainLayout extends Component {
     render() {
         return (
             <Fragment>
+                <title>{this.props.title}</title>
                 <Navbar expand="lg" className="fixed-top" variant="light" bg="light">
                     <Navbar.Brand href="#" onClick={this.showHideSideNav}> <FontAwesomeIcon icon={faBars}/> </Navbar.Brand>
+                    <Link className="btn btn-dark ml-auto">Logout</Link>
                 </Navbar>
 
                 <div className={this.state.sideNavClass}>

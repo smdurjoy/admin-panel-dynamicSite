@@ -73,7 +73,7 @@ class ClientReviewPage extends Component {
         console.log(this.state.dataList)
         if(this.state.isLoading == true) {
             return(
-                <MainLayout>
+                <MainLayout title="Client Review">
                     <Container>
                         <Loading/>
                     </Container>
@@ -81,7 +81,7 @@ class ClientReviewPage extends Component {
             )
         } else if(this.state.isError == true) {
             return(
-                <MainLayout>
+                <MainLayout title="Client Review">
                     <Container>
                         <WentWrong/>
                     </Container>
@@ -105,7 +105,7 @@ class ClientReviewPage extends Component {
 
             return (
                 <Fragment>
-                    <MainLayout>
+                    <MainLayout title="Client Review">
                         <Container>
                             <Row>
                                 <Col lg={12} md={12} sm={12}>

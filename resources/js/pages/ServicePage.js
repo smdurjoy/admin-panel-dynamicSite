@@ -20,6 +20,7 @@ class ServicePage extends Component {
         }
 
         this.deleteRow = this.deleteRow.bind(this)
+        this.imgCellFormat = this.imgCellFormat.bind(this)
     }
 
     componentDidMount() {
@@ -69,11 +70,16 @@ class ServicePage extends Component {
         }
     }
 
+    imgCellFormat(cell) {
+        return <img className="w-75" src={cell}/>
+    }
+
+
     render() {
         console.log(this.state.dataList)
         if(this.state.isLoading == true) {
             return(
-                <MainLayout>
+                <MainLayout title="Service">
                     <Container>
                         <Loading/>
                     </Container>
@@ -81,7 +87,7 @@ class ServicePage extends Component {
             )
         } else if(this.state.isError == true) {
             return(
-                <MainLayout>
+                <MainLayout title="Service">
                     <Container>
                         <WentWrong/>
                     </Container>
@@ -91,9 +97,9 @@ class ServicePage extends Component {
             const data = this.state.dataList;
             const columns = [
                 {dataField: "id", text: "ID"},
-                {dataField: "service_name", text: "Service Name"},
-                {dataField: "service_description", text: "Service Comment"},
-                {dataField: "service_image", text: "Service Image"}
+                {dataField: "service_image", text: "Image", formatter:this.imgCellFormat},
+                {dataField: "service_name", text: "Name"},
+                {dataField: "service_description", text: "Description"},
             ]
 
             const selectRow = {
@@ -105,7 +111,7 @@ class ServicePage extends Component {
 
             return (
                 <Fragment>
-                    <MainLayout>
+                    <MainLayout title="Service">
                         <Container>
                             <Row>
                                 <Col lg={12} md={12} sm={12}>

@@ -46,6 +46,28 @@
     display: none;
 }
 
+.titleText {
+    font-size: 25px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 600;
+}
+
+.desText {
+    font-size: 16px;
+}
+
+.card {
+    width: 100%;
+    border: none !important;
+    border-radius: 0% !important;
+    box-shadow: 0 0 6px 0 rgba(240, 240, 240, 1);
+}
+
+.card:hover {
+    border: none !important;
+    box-shadow: 0 0 6px 0 rgba(240, 240, 240, 1);
+}
+
 /*wentWrong component*/
 .wentWrongImage {
     height: 200px;

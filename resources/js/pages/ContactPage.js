@@ -73,7 +73,7 @@ class ContactPage extends Component {
     render() {
         if(this.state.isLoading == true) {
             return(
-                <MainLayout>
+                <MainLayout title="Contact">
                     <Container>
                         <Loading/>
                     </Container>
@@ -81,7 +81,7 @@ class ContactPage extends Component {
             )
         } else if(this.state.isError == true) {
             return(
-                <MainLayout>
+                <MainLayout title="Contact">
                     <Container>
                         <WentWrong/>
                     </Container>
@@ -105,7 +105,7 @@ class ContactPage extends Component {
 
             return (
                 <Fragment>
-                    <MainLayout>
+                    <MainLayout title="Contact">
                         <Container>
                             <Row>
                                 <Col lg={12} md={12} sm={12}>

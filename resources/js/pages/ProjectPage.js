@@ -17,15 +17,18 @@ class ProjectPage extends Component {
             isError: false,
             selectRowId: '',
             deleteBtnText: 'Delete',
+            showHide: "d-none",
+            proF: ""
         }
 
         this.deleteRow = this.deleteRow.bind(this)
+        this.imgCellFormat = this.imgCellFormat.bind(this)
     }
 
     componentDidMount() {
         Axios.get('/projectData').then((response) => {
             if(response.status == 200) {
-                this.setState({dataList: response.data, isLoading: false})
+                this.setState({dataList: response.data, isLoading: false, proF: response.data['project_features']})
             } else {
                 this.setState({isLoading: false, isError: true})
             }
@@ -69,10 +72,14 @@ class ProjectPage extends Component {
         }
     }
 
+    imgCellFormat(cell) {
+        return <img className="w-75" src={cell}/>
+    }
+
     render() {
         if(this.state.isLoading == true) {
             return(
-                <MainLayout>
+                <MainLayout title="Project">
                     <Container>
                         <Loading/>
                     </Container>
@@ -80,7 +87,7 @@ class ProjectPage extends Component {
             )
         } else if(this.state.isError == true) {
             return(
-                <MainLayout>
+                <MainLayout title="Project">
                     <Container>
                         <WentWrong/>
                     </Container>
@@ -90,11 +97,9 @@ class ProjectPage extends Component {
             const data = this.state.dataList;
             const columns = [
                 {dataField: "id", text: "ID"},
-                {dataField: "project_name", text: "Project Name"},
-                {dataField: "short_description", text: "Short Description"},
-                {dataField: "project_features", text: "Project Features"},
-                {dataField: "image_one", text: "Image One"},
-                {dataField: "image_two", text: "Image Two"}
+                {dataField: "image_one", text: "Image", formatter:this.imgCellFormat},
+                {dataField: "project_name", text: "Name"},
+                {dataField: "short_description", text: "Short Description"}
             ]
 
             const selectRow = {
@@ -106,11 +111,12 @@ class ProjectPage extends Component {
 
             return (
                 <Fragment>
-                    <MainLayout>
+                    <MainLayout title="Project">
                         <Container>
                             <Row>
                                 <Col lg={12} md={12} sm={12}>
-                                    <h1 className=" text-center mt-5">Services</h1>
+                                    <h1 className=" text-center mt-5">Projects</h1>
+                                    <div className={this.state.showHide}>Ami show hide div</div>
                                     <Button className="btn btn-dark my-2" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
                                     <BootstrapTable
                                         keyField='id'
