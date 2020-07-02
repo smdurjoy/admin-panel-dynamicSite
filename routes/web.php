@@ -14,6 +14,7 @@ Route::get('/courseData', 'CourseController@getCourseData');
 Route::post('/courseDelete', 'CourseController@onCourseDelete');
 Route::post('/editCourse', 'CourseController@onEditCourse');
 Route::post('/courseEditDetails', 'CourseController@getCourseEditDetails');
+Route::post('/addCourse', 'CourseController@onCourseAdd');
 
 // Service data manage
 Route::get('/serviceData', 'ServiceController@getServiceData');

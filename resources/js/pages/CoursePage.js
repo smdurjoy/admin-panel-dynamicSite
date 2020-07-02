@@ -21,7 +21,7 @@ class CoursePage extends Component {
             isError: false,
             selectRowId: '',
             deleteBtnText: 'Delete',
-            modal: false,
+            editModal: false,
             short_title: '',
             short_des: '',
             short_img: '',
@@ -32,6 +32,7 @@ class CoursePage extends Component {
             skill_all: '',
             video_url: '',
             course_link: '',
+            addModal: false
         }
 
         this.deleteRow = this.deleteRow.bind(this)
@@ -39,6 +40,9 @@ class CoursePage extends Component {
         this.editRow = this.editRow.bind(this)
         this.editCourse = this.editCourse.bind(this)
         this.editModalToggle = this.editModalToggle.bind(this)
+        this.addModalToggle = this.addModalToggle.bind(this)
+        this.addCourse = this.addCourse.bind(this)
+        this.addCourseButtonClick = this.addCourseButtonClick.bind(this)
     }
 
     componentDidMount() {
@@ -110,19 +114,19 @@ class CoursePage extends Component {
         this.editCourse(id, short_title, short_des, short_img, long_title, long_des, total_lecture, total_students, skill_all, video_url, course_link)
     }
 
-    editCourse($id, $sTitle, $sDes, $sImg, $lTitle, $lDes, $tLecture, $tStudent, $skill, $videoUrl, $cLink) {
+    editCourse(id, sTitle, sDes, sImg, lTitle, lDes, tLecture, tStudent, skill, videoUrl, cLink) {
         Axios.post('/editCourse', {
-            id: $id,
-            short_title: $sTitle,
-            short_des: $sTitle,
-            short_img: $sImg,
-            long_title: $lTitle,
-            long_des: $lDes,
-            total_lecture: $tLecture,
-            total_students: $tStudent,
-            skill_all: $skill,
-            video_url: $videoUrl,
-            course_link: $cLink
+            id: id,
+            short_title: sTitle,
+            short_des: sTitle,
+            short_img: sImg,
+            long_title: lTitle,
+            long_des: lDes,
+            total_lecture: tLecture,
+            total_students: tStudent,
+            skill_all: skill,
+            video_url: videoUrl,
+            course_link: cLink
         }).then((response) => {
             if(response.status == 200) {
                 Swal.fire('Course has been updated !')
@@ -144,8 +148,8 @@ class CoursePage extends Component {
         if(this.state.selectRowId == '') {
             return Swal.fire('Please select a row for Update!')
         } else {
-            if(this.state.modal == false) {
-                this.setState({modal: true});
+            if(this.state.editModal == false) {
+                this.setState({editModal: true});
                 Axios.post('/courseEditDetails', {id:this.state.selectRowId}).then((response) => {
                     if(response.status == 200) {
                         this.setState({
@@ -168,10 +172,63 @@ class CoursePage extends Component {
                 })
             } else {
                 this.setState({
-                    modal: false
+                    editModal: false
                 });
             }
         }
+    }
+
+    // Add course modal
+    addModalToggle() {
+        if(this.state.addModal == false) {
+            this.setState({addModal: true});
+        } else {
+            this.setState({
+                addModal: false
+            });
+        }
+    }
+
+    addCourseButtonClick() {
+        let shortTitle = document.getElementById('shortTitle').value;
+        let shortDes = document.getElementById('shortDes').value;
+        let totalLec = document.getElementById('totalLec').value;
+        let courseUrl = document.getElementById('courseUrl').value;
+        let longDes = document.getElementById('longDes').value;
+        let longTitle = document.getElementById('longTitle').value;
+        let shortImg = document.getElementById('shortImg').value;
+        let totalStu = document.getElementById('totalStu').value;
+        let courseLink = document.getElementById('courseLink').value;
+        let allSkill = document.getElementById('allSkill').value;
+
+        this.addCourse(shortTitle, shortDes, shortImg, longTitle, longDes, totalLec, totalStu, allSkill, courseUrl, courseLink)
+    }
+
+    addCourse(sTitle, sDes, sImg, lTitle, lDes, tLecture, tStudent, skill, videoUrl, cLink) {
+        Axios.post('/addCourse', {
+            short_title: sTitle,
+            short_des: sDes,
+            short_img: sImg,
+            long_title: lTitle,
+            long_des: lDes,
+            total_lecture: tLecture,
+            total_students: tStudent,
+            skill_all: skill,
+            video_url: videoUrl,
+            course_link: cLink
+        }).then((response) => {
+            if(response.status == 200 && response.data == 1) {
+                Swal.fire('Course Added Successfully !');
+                this.addModalToggle();
+                this.componentDidMount();
+            } else {
+                Swal.fire('Something Went Wrong !');
+                this.addModalToggle();
+            }
+        }).catch((error) => {
+            Swal.fire('Something Went Wrong !');
+            this.addModalToggle();
+        })
     }
 
     imgCellFormat(cell) {
@@ -219,7 +276,7 @@ class CoursePage extends Component {
                         <Container>
                             <Row>
                                 <Col md={4} lg={4} sm={4}>
-                                    <Button className="btn btn-info mt-5 btn-sm">Add</Button>
+                                    <Button className="btn btn-info mt-5 btn-sm" onClick={this.addModalToggle}>Add</Button>
                                     <Button className="btn btn-info mt-5 btn-sm" onClick={this.editModalToggle}>Edit</Button>
                                     <Button className="btn btn-danger mt-5 btn-sm" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
                                 </Col>
@@ -245,7 +302,7 @@ class CoursePage extends Component {
                             </Row>
                         </Container>
                         <MDBContainer>
-                            <MDBModal isOpen={this.state.modal} toggle={this.editModalToggle} size="lg">
+                            <MDBModal isOpen={this.state.editModal} toggle={this.editModalToggle} size="lg">
                                 <MDBModalHeader toggle={this.editModalToggle}>Edit Course</MDBModalHeader>
                                 <MDBModalBody>
                                     <Row>
@@ -279,6 +336,43 @@ class CoursePage extends Component {
                                 </MDBModalFooter>
                             </MDBModal>
                         </MDBContainer>
+
+                        <MDBContainer>
+                            <MDBModal isOpen={this.state.addModal} toggle={this.addModalToggle} size="lg">
+                                <MDBModalHeader toggle={this.addModalToggle}>Add Course</MDBModalHeader>
+                                <MDBModalBody>
+                                    <Row>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput label="Short Title" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="shortTitle"/>
+                                            <MDBInput label="Short Description" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="shortDes"/>
+                                            <MDBInput label="Total Lecture" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="totalLec"/>
+                                            <MDBInput label="Course Video Url" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="courseUrl"/>
+                                            <MDBInput type="textarea" label="Long Description" rows="4" id="longDes"/>
+                                        </Col>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput label="Long Title" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="longTitle"/>
+                                            <MDBInput label="Short Image" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="shortImg"/>
+                                           <MDBInput label="Total Students" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="totalStu"/>
+                                            <MDBInput label="Course Link" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="courseLink"/>
+                                            <MDBInput type="textarea" label="All Skills" rows="4" id="allSkill"/>
+                                        </Col>
+                                    </Row>
+                                </MDBModalBody>
+                                <MDBModalFooter>
+                                    <MDBBtn color="primary" size="sm" onClick={this.addCourseButtonClick}>Add</MDBBtn>
+                                    <MDBBtn color="danger" size="sm" onClick={this.addModalToggle}>Close</MDBBtn>
+                                </MDBModalFooter>
+                            </MDBModal>
+                        </MDBContainer>
+
                     </MainLayout>
                 </Fragment>
             );
