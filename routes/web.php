@@ -24,6 +24,8 @@ Route::post('/serviceDelete', 'ServiceController@onServiceDelete');
 Route::get('/projectData', 'ProjectController@getProjectData');
 Route::post('/projectDelete', 'ProjectController@onProjectDelete');
 Route::post('/addProject', 'ProjectController@onProjectAdd');
+Route::post('/projectEditDetails', 'ProjectController@getProjectEditDetails');
+Route::post('/editProject', 'ProjectController@onProjectEdit');
 
 // Client review data manage
 Route::get('/clientData', 'ClientReviewController@getClientData');

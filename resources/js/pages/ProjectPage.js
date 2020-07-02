@@ -20,7 +20,14 @@ class ProjectPage extends Component {
             selectRowId: '',
             deleteBtnText: 'Delete',
             showHide: "d-none",
-            addModal: false
+            addModal: false,
+            project_name: '',
+            short_description: '',
+            image_one: '',
+            image_two: '',
+            live_preview: '',
+            project_features: '',
+            editModal: false
         }
 
         this.deleteRow = this.deleteRow.bind(this)
@@ -28,6 +35,9 @@ class ProjectPage extends Component {
         this.addModalToggle = this.addModalToggle.bind(this)
         this.addProjectButtonClick = this.addProjectButtonClick.bind(this)
         this.addProject = this.addProject.bind(this)
+        this.editRow = this.editRow.bind(this)
+        this.editProject = this.editProject.bind(this)
+        this.editModalToggle = this.editModalToggle.bind(this)
     }
 
     componentDidMount() {
@@ -77,7 +87,7 @@ class ProjectPage extends Component {
         }
     }
 
-    // Add project modal
+    // Add project functions
     addModalToggle() {
         if(this.state.addModal == false) {
             this.setState({addModal: true});
@@ -120,6 +130,73 @@ class ProjectPage extends Component {
             Swal.fire('Something Went Wrong !');
             this.addModalToggle();
         })
+    }
+
+    // Edit project functions
+    editRow() {
+        const id = this.state.selectRowId
+        const pronName = this.state.project_name
+        const shortDes = this.state.short_description
+        const imgOne = this.state.image_one
+        const imgTwo = this.state.image_two
+        const livePreview = this.state.live_preview
+        const proF = this.state.project_features
+
+        this.editProject(id, pronName, shortDes, imgOne, imgTwo, livePreview, proF)
+    }
+
+    editProject(id, pronName, shortDes, imgOne, imgTwo, livePreview, proF) {
+        Axios.post('/editProject', {
+            id: id,
+            project_name: pronName,
+            short_description: shortDes,
+            image_one: imgOne,
+            image_two: imgTwo,
+            live_preview: livePreview,
+            project_features: proF,
+        }).then((response) => {
+            if(response.status == 200) {
+                Swal.fire('Project has been updated !')
+                this.editModalToggle()
+                this.componentDidMount()
+            } else {
+                Swal.fire('Something Went Wrong !')
+                this.editModalToggle()
+            }
+        }).catch((error) => {
+            Swal.fire('Something Went Wrong !')
+            this.editModalToggle()
+        })
+    }
+
+    editModalToggle() {
+        if(this.state.selectRowId == '') {
+            return Swal.fire('Please select a row for Update!')
+        } else {
+            if(this.state.editModal == false) {
+                this.setState({editModal: true});
+                Axios.post('/projectEditDetails', {id:this.state.selectRowId}).then((response) => {
+                    if(response.status == 200) {
+                        this.setState({
+                            project_name: response.data[0]['project_name'],
+                            short_description: response.data[0]['short_description'],
+                            image_one: response.data[0]['image_one'],
+                            image_two: response.data[0]['image_two'],
+                            live_preview: response.data[0]['live_preview'],
+                            project_features: response.data[0]['project_features']
+                        });
+                    } else {
+                        Swal.fire('Something Went Wrong !');
+                    }
+                }).catch((error) => {
+                    Swal.fire('Something Went Wrong !');
+                })
+            } else {
+                this.setState({
+                    editModal: false
+                });
+            }
+        }
     }
 
     imgCellFormat(cell) {
@@ -166,7 +243,7 @@ class ProjectPage extends Component {
                             <Row>
                                 <Col md={4} lg={4} sm={4}>
                                     <Button className="btn btn-info mt-5 btn-sm" onClick={this.addModalToggle}>Add</Button>
-                                    <Button className="btn btn-info mt-5 btn-sm">Edit</Button>
+                                    <Button className="btn btn-info mt-5 btn-sm" onClick={this.editModalToggle}>Edit</Button>
                                     <Button className="btn btn-danger mt-5 btn-sm" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
                                 </Col>
                                 <Col md={4} lg={4} sm={4}>
@@ -191,6 +268,37 @@ class ProjectPage extends Component {
                             </Row>
                         </Container>
 
+                        {/*project edit modal*/}
+                        <MDBContainer>
+                            <MDBModal isOpen={this.state.editModal} toggle={this.editModalToggle} size="lg">
+                                <MDBModalHeader toggle={this.editModalToggle}>Edit Course</MDBModalHeader>
+                                <MDBModalBody>
+                                    <Row>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput label="Short Title" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" value={ this.state.project_name } onChange={e => this.setState({ project_name: e.target.value })}/>
+                                            <MDBInput label="Short Description" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" value={ this.state.image_one } onChange={e => this.setState({ image_one: e.target.value })}/>
+                                            <MDBInput label="Total Lecture" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" value={ this.state.live_preview } onChange={e => this.setState({ live_preview: e.target.value })}/>
+                                        </Col>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput label="Long Title" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" value={ this.state.short_description } onChange={e => this.setState({ short_description: e.target.value })}/>
+                                            <MDBInput label="Short Image" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" value={ this.state.image_two } onChange={e => this.setState({ image_two: e.target.value })}/>
+                                            <MDBInput type="textarea" label="All Skills" rows="4" value={ this.state.project_features } onChange={e => this.setState({ project_features: e.target.value })}/>
+                                        </Col>
+                                    </Row>
+                                </MDBModalBody>
+                                <MDBModalFooter>
+                                    <MDBBtn color="primary" size="sm" onClick={this.editRow}>Update</MDBBtn>
+                                    <MDBBtn color="danger" size="sm" onClick={this.editModalToggle}>Close</MDBBtn>
+                                </MDBModalFooter>
+                            </MDBModal>
+                        </MDBContainer>
+
+                        {/*project add modal*/}
                         <MDBContainer>
                             <MDBModal isOpen={this.state.addModal} toggle={this.addModalToggle} size="lg">
                                 <MDBModalHeader toggle={this.addModalToggle}>Add Project</MDBModalHeader>

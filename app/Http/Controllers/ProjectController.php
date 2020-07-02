@@ -38,4 +38,23 @@ class ProjectController extends Controller
             return 0;
         }
     }
+
+    function getProjectEditDetails(Request $request) {
+        $id = $request->input('id');
+        $result = ProjectModel::where('id', $id)->get();
+        return $result;
+    }
+
+    function onProjectEdit(Request $request) {
+        $id = $request->input('id');
+        $proName = $request->input('project_name');
+        $shortDes = $request->input('short_description');
+        $imgOne = $request->input('image_one');
+        $imgTwo = $request->input('image_two');
+        $livePreview = $request->input('live_preview');
+        $proFeatures = $request->input('project_features');
+
+        ProjectModel::where('id', $id)->update(['project_name' => $proName, 'short_description' => $shortDes, 'image_one' => $imgOne, 'image_two' => $imgTwo, 'live_preview' => $livePreview, 'project_features' => $proFeatures]);
+
+    }
 }
