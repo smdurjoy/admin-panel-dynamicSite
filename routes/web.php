@@ -23,6 +23,7 @@ Route::post('/serviceDelete', 'ServiceController@onServiceDelete');
 // Project data manage
 Route::get('/projectData', 'ProjectController@getProjectData');
 Route::post('/projectDelete', 'ProjectController@onProjectDelete');
+Route::post('/addProject', 'ProjectController@onProjectAdd');
 
 // Client review data manage
 Route::get('/clientData', 'ClientReviewController@getClientData');
