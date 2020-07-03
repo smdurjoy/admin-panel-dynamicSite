@@ -20,6 +20,8 @@ Route::post('/addCourse', 'CourseController@onCourseAdd');
 Route::get('/serviceData', 'ServiceController@getServiceData');
 Route::post('/serviceDelete', 'ServiceController@onServiceDelete');
 Route::post('/addService', 'ServiceController@onServiceAdd');
+Route::post('/serviceEditDetails', 'ServiceController@getServiceEditDetails');
+Route::post('/editService', 'ServiceController@onServiceEdit');
 
 // Project data manage
 Route::get('/projectData', 'ProjectController@getProjectData');

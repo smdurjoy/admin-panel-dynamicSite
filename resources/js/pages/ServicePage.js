@@ -19,7 +19,11 @@ class ServicePage extends Component {
             isError: false,
             selectRowId: '',
             deleteBtnText: 'Delete',
-            addModal: false
+            addModal: false,
+            service_name: '',
+            service_description: '',
+            service_image: '',
+            editModal: false
         }
 
         this.deleteRow = this.deleteRow.bind(this)
@@ -27,6 +31,9 @@ class ServicePage extends Component {
         this.addModalToggle = this.addModalToggle.bind(this)
         this.addServiceButtonClick = this.addServiceButtonClick.bind(this)
         this.addService = this.addService.bind(this)
+        this.editRow = this.editRow.bind(this)
+        this.editService = this.editService.bind(this)
+        this.editModalToggle = this.editModalToggle.bind(this)
     }
 
     componentDidMount() {
@@ -119,7 +126,63 @@ class ServicePage extends Component {
         })
     }
 
+    // Edit project functions
+    editRow() {
+        const id = this.state.selectRowId
+        const serviceName = this.state.service_name
+        const serviceDes = this.state.service_description
+        const serviceImg = this.state.service_image
 
+        this.editService(id, serviceName, serviceDes, serviceImg)
+    }
+
+    editService(id, serviceName, serviceDes, serviceImg) {
+        Axios.post('/editService', {
+            id: id,
+            service_name: serviceName,
+            service_description: serviceDes,
+            service_image: serviceImg,
+        }).then((response) => {
+            if(response.status == 200) {
+                Swal.fire('Service has been updated !')
+                this.editModalToggle()
+                this.componentDidMount()
+            } else {
+                Swal.fire('Something Went Wrong !')
+                this.editModalToggle()
+            }
+        }).catch((error) => {
+            Swal.fire('Something Went Wrong !')
+            this.editModalToggle()
+        })
+    }
+
+    editModalToggle() {
+        if(this.state.selectRowId == '') {
+            return Swal.fire('Please select a row for Update!')
+        } else {
+            if(this.state.editModal == false) {
+                this.setState({editModal: true});
+                Axios.post('/serviceEditDetails', {id:this.state.selectRowId}).then((response) => {
+                    if(response.status == 200) {
+                        this.setState({
+                            service_name: response.data[0]['service_name'],
+                            service_description: response.data[0]['service_description'],
+                            service_image: response.data[0]['service_image']
+                        });
+                    } else {
+                        Swal.fire('Something Went Wrong !');
+                    }
+                }).catch((error) => {
+                    Swal.fire('Something Went Wrong !');
+                })
+            } else {
+                this.setState({
+                    editModal: false
+                });
+            }
+        }
+    }
 
     render() {
         if(this.state.isLoading == true) {
@@ -206,6 +269,30 @@ class ServicePage extends Component {
                                 <MDBModalFooter>
                                     <MDBBtn color="primary" size="sm" onClick={this.addServiceButtonClick}>Add</MDBBtn>
                                     <MDBBtn color="danger" size="sm" onClick={this.addModalToggle}>Close</MDBBtn>
+                                </MDBModalFooter>
+                            </MDBModal>
+                        </MDBContainer>
+
+                        {/*project edit modal*/}
+                        <MDBContainer>
+                            <MDBModal isOpen={this.state.editModal} toggle={this.editModalToggle} size="lg">
+                                <MDBModalHeader toggle={this.editModalToggle}>Edit Course</MDBModalHeader>
+                                <MDBModalBody>
+                                    <Row>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput label="Service Name" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" value={ this.state.service_name } onChange={e => this.setState({ service_name: e.target.value })}/>
+                                            <MDBInput label="Service Image" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" value={ this.state.service_image } onChange={e => this.setState({ service_image: e.target.value })}/>
+                                        </Col>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput type="textarea" label="Service Description" rows="4" value={ this.state.service_description } onChange={e => this.setState({ service_description: e.target.value })}/>
+                                        </Col>
+                                    </Row>
+                                </MDBModalBody>
+                                <MDBModalFooter>
+                                    <MDBBtn color="primary" size="sm" onClick={this.editRow}>Update</MDBBtn>
+                                    <MDBBtn color="danger" size="sm" onClick={this.editModalToggle}>Close</MDBBtn>
                                 </MDBModalFooter>
                             </MDBModal>
                         </MDBContainer>
