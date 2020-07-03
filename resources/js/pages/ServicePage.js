@@ -8,6 +8,7 @@ import WentWrong from "../components/WentWrong";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import {Link} from "react-router-dom";
+import {MDBBtn, MDBContainer, MDBInput, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
 
 class ServicePage extends Component {
     constructor() {
@@ -17,11 +18,15 @@ class ServicePage extends Component {
             isLoading: true,
             isError: false,
             selectRowId: '',
-            deleteBtnText: 'Delete'
+            deleteBtnText: 'Delete',
+            addModal: false
         }
 
         this.deleteRow = this.deleteRow.bind(this)
         this.imgCellFormat = this.imgCellFormat.bind(this)
+        this.addModalToggle = this.addModalToggle.bind(this)
+        this.addServiceButtonClick = this.addServiceButtonClick.bind(this)
+        this.addService = this.addService.bind(this)
     }
 
     componentDidMount() {
@@ -75,6 +80,46 @@ class ServicePage extends Component {
         return <img className="tableImage" src={cell}/>
     }
 
+    // Add service functions
+    addModalToggle() {
+        if(this.state.addModal == false) {
+            this.setState({addModal: true});
+        } else {
+            this.setState({
+                addModal: false
+            });
+        }
+    }
+
+    addServiceButtonClick() {
+        let serviceName = document.getElementById('serviceName').value;
+        let serviceDes = document.getElementById('serviceDes').value;
+        let serviceImg = document.getElementById('serviceImg').value;
+
+        this.addService(serviceName, serviceDes, serviceImg)
+    }
+
+    addService(serviceName, serviceDes, serviceImg) {
+        Axios.post('/addService', {
+            service_name: serviceName,
+            service_description: serviceDes,
+            service_image: serviceImg
+        }).then((response) => {
+            if(response.status == 200 && response.data == 1) {
+                Swal.fire('Service Added Successfully !');
+                this.addModalToggle();
+                this.componentDidMount();
+            } else {
+                Swal.fire('Something Went Wrong !');
+                this.addModalToggle();
+            }
+        }).catch((error) => {
+            Swal.fire('Something Went Wrong !');
+            this.addModalToggle();
+        })
+    }
+
+
 
     render() {
         if(this.state.isLoading == true) {
@@ -115,7 +160,9 @@ class ServicePage extends Component {
                         <Container>
                             <Row>
                                 <Col md={4} lg={4} sm={4}>
-                                    <Button className="btn btn-dark mt-5" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
+                                    <Button className="btn btn-info mt-5 btn-sm" onClick={this.addModalToggle}>Add</Button>
+                                    <Button className="btn btn-info mt-5 btn-sm" onClick={this.editModalToggle}>Edit</Button>
+                                    <Button className="btn btn-dark mt-5 btn-sm" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
                                 </Col>
                                 <Col md={4} lg={4} sm={4}>
                                     <h1 className=" text-center titleText mt-5">Services</h1>
@@ -138,6 +185,31 @@ class ServicePage extends Component {
                                 </Col>
                             </Row>
                         </Container>
+
+                        {/*service add modal*/}
+                        <MDBContainer>
+                            <MDBModal isOpen={this.state.addModal} toggle={this.addModalToggle} size="lg">
+                                <MDBModalHeader toggle={this.addModalToggle}>Add Project</MDBModalHeader>
+                                <MDBModalBody>
+                                    <Row>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput label="Service Name" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="serviceName"/>
+                                            <MDBInput label="Service Image" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="serviceImg"/>
+                                        </Col>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput type="textarea" label="Service Description" rows="3" id="serviceDes"/>
+                                        </Col>
+                                    </Row>
+                                </MDBModalBody>
+                                <MDBModalFooter>
+                                    <MDBBtn color="primary" size="sm" onClick={this.addServiceButtonClick}>Add</MDBBtn>
+                                    <MDBBtn color="danger" size="sm" onClick={this.addModalToggle}>Close</MDBBtn>
+                                </MDBModalFooter>
+                            </MDBModal>
+                        </MDBContainer>
+
                     </MainLayout>
                 </Fragment>
             );
