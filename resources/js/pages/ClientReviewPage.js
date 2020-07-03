@@ -8,6 +8,7 @@ import WentWrong from "../components/WentWrong";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import {Link} from "react-router-dom";
+import {MDBBtn, MDBContainer, MDBInput, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
 
 class ClientReviewPage extends Component {
     constructor() {
@@ -17,10 +18,14 @@ class ClientReviewPage extends Component {
             isLoading: true,
             isError: false,
             selectRowId: '',
-            deleteBtnText: 'Delete'
+            deleteBtnText: 'Delete',
+            addModal: false
         }
 
         this.deleteRow = this.deleteRow.bind(this)
+        this.addModalToggle = this.addModalToggle.bind(this)
+        this.addClientReviewButtonClick = this.addClientReviewButtonClick.bind(this)
+        this.addClientReview = this.addClientReview.bind(this)
     }
 
     componentDidMount() {
@@ -70,8 +75,46 @@ class ClientReviewPage extends Component {
         }
     }
 
+    // Add service functions
+    addModalToggle() {
+        if(this.state.addModal == false) {
+            this.setState({addModal: true});
+        } else {
+            this.setState({
+                addModal: false
+            });
+        }
+    }
+
+    addClientReviewButtonClick() {
+        let clientName = document.getElementById('clientName').value;
+        let clientComment = document.getElementById('clientComment').value;
+        let clientImg = document.getElementById('clientImg').value;
+
+        this.addClientReview(clientName, clientComment, clientImg)
+    }
+
+    addClientReview(clientName, clientComment, clientImg) {
+        Axios.post('/addClientReview', {
+            client_name: clientName,
+            client_comment: clientComment,
+            client_image: clientImg
+        }).then((response) => {
+            if(response.status == 200 && response.data == 1) {
+                Swal.fire('Service Added Successfully !');
+                this.addModalToggle();
+                this.componentDidMount();
+            } else {
+                Swal.fire('Something Went Wrong !');
+                this.addModalToggle();
+            }
+        }).catch((error) => {
+            Swal.fire('Something Went Wrong !');
+            this.addModalToggle();
+        })
+    }
+
     render() {
-        console.log(this.state.dataList)
         if(this.state.isLoading == true) {
             return(
                 <MainLayout title="Client Review">
@@ -110,7 +153,9 @@ class ClientReviewPage extends Component {
                         <Container>
                             <Row>
                                 <Col md={4} lg={4} sm={4}>
-                                    <Button className="btn btn-dark mt-5" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
+                                    <Button className="btn btn-info mt-5 btn-sm" onClick={this.addModalToggle}>Add</Button>
+                                    <Button className="btn btn-info mt-5 btn-sm" onClick={this.editModalToggle}>Edit</Button>
+                                    <Button className="btn btn-danger mt-5 btn-sm" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
                                 </Col>
                                 <Col md={4} lg={4} sm={4}>
                                     <h1 className=" text-center titleText mt-5">Client Review</h1>
@@ -133,6 +178,31 @@ class ClientReviewPage extends Component {
                                 </Col>
                             </Row>
                         </Container>
+
+                        {/*client review add modal*/}
+                        <MDBContainer>
+                            <MDBModal isOpen={this.state.addModal} toggle={this.addModalToggle} size="lg">
+                                <MDBModalHeader toggle={this.addModalToggle}>Add Project</MDBModalHeader>
+                                <MDBModalBody>
+                                    <Row>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput label="Client Name" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="clientName"/>
+                                            <MDBInput label="Client Image" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" id="clientImg"/>
+                                        </Col>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput type="textarea" label="Client Comment" rows="3" id="clientComment"/>
+                                        </Col>
+                                    </Row>
+                                </MDBModalBody>
+                                <MDBModalFooter>
+                                    <MDBBtn color="primary" size="sm" onClick={this.addClientReviewButtonClick}>Add</MDBBtn>
+                                    <MDBBtn color="danger" size="sm" onClick={this.addModalToggle}>Close</MDBBtn>
+                                </MDBModalFooter>
+                            </MDBModal>
+                        </MDBContainer>
+
                     </MainLayout>
                 </Fragment>
             );

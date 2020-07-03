@@ -21,4 +21,18 @@ class ClientReviewController extends Controller
             return 0;
         }
     }
+
+    function onClientReviewAdd(Request $request) {
+        $clientName = $request->input('client_name');
+        $clientComment = $request->input('client_comment');
+        $clientImg = $request->input('client_image');
+
+        $result = ClientReviewModel::insert(['client_name' => $clientName, 'client_comment' => $clientComment, 'client_image' => $clientImg]);
+
+        if($result == true) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

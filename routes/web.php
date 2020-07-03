@@ -33,6 +33,7 @@ Route::post('/editProject', 'ProjectController@onProjectEdit');
 // Client review data manage
 Route::get('/clientData', 'ClientReviewController@getClientData');
 Route::post('/clientDelete', 'ClientReviewController@onClientReviewDelete');
+Route::post('/addClientReview', 'ClientReviewController@onClientReviewAdd');
 
 Route::get('/', function () {
     return view('index');
