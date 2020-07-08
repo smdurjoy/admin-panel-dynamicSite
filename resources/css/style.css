@@ -64,12 +64,12 @@ body {
     width: 100%;
     border: none !important;
     border-radius: 0% !important;
-    box-shadow: 0 0 6px 0 rgba(240, 240, 240, 1);
+    box-shadow: 0 0 6px 0 rgba(240, 240, 240, 1) !important;
 }
 
 .card:hover {
     border: none !important;
-    box-shadow: 0 0 10px 0 rgba(240, 240, 240, 1);
+    box-shadow: 0 0 8px 0 rgba(240, 240, 240, 1) !important;
 }
 
 .navDiv {

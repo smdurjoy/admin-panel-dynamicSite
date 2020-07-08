@@ -40,7 +40,7 @@ class MainLayout extends Component {
                 <title>{this.props.title}</title>
                 <Navbar expand="lg" className="fixed-top navBar" variant="light" bg="light">
                     <Navbar.Brand href="#" onClick={this.showHideSideNav}> <FontAwesomeIcon icon={faBars}/> </Navbar.Brand>
-                    <h6 className="ml-auto"> Welcome Admin <FontAwesomeIcon icon={faSortDown}/></h6>
+                    <a className="btn btn-dark btn-sm ml-auto" href="/logout">Logout</a>
                 </Navbar>
 
                 <div className={this.state.sideNavClass}>
