@@ -39,6 +39,7 @@ Route::post('/editClientReview', 'ClientReviewController@onClientReviewEdit');
 
 // Admin Login
 Route::get('/login', 'AdminLoginController@loginPage');
+Route::get('/onLogin/{userName}/{password}', 'AdminLoginController@onLogin');
 
 Route::get('/', function () {
     return view('index');

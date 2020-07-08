@@ -15,15 +15,36 @@
                             <h4>Admin Login</h4>
                         </div>
                         <div class="card-body">
-                            <input class="form-control" type="text" placeholder="User Name"></input><br>
-                            <input class="form-control" type="password" placeholder="Password"></input>
+                            <input class="form-control" id="userName" type="text" placeholder="User Name"></input><br>
+                            <input class="form-control" id="password" type="password" placeholder="Password"></input>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary btn-block" type="submit">Submit</button>
+                            <button class="btn btn-primary btn-block" onclick="adminLogin()">Submit</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script type="text/javascript">
+            function adminLogin() {
+                let userName = document.getElementById('userName').value;
+                let password = document.getElementById('password').value;
+
+                let xHttp = new XMLHttpRequest();
+                xHttp.onreadystatechange = function() {
+                    if(this.readyState == 4 && this.status == 200) {
+                        if(this.responseText == "1") {
+                            window.location.href = "/"
+                        } else {
+                            alert('Login Failed !')
+                        }
+                    }
+                }
+
+                xHttp.open("GET", "/onLogin/"+userName+"/"+password, true);
+                xHttp.send();
+            }
+        </script>
     </body>
 </html>
