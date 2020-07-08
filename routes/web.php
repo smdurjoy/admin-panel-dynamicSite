@@ -34,6 +34,11 @@ Route::post('/editProject', 'ProjectController@onProjectEdit');
 Route::get('/clientData', 'ClientReviewController@getClientData');
 Route::post('/clientDelete', 'ClientReviewController@onClientReviewDelete');
 Route::post('/addClientReview', 'ClientReviewController@onClientReviewAdd');
+Route::post('/clientReviewEditDetails', 'ClientReviewController@getClientReviewEditDetails');
+Route::post('/editClientReview', 'ClientReviewController@onClientReviewEdit');
+
+// Admin Login
+Route::get('/login', 'AdminLoginController@loginPage');
 
 Route::get('/', function () {
     return view('index');

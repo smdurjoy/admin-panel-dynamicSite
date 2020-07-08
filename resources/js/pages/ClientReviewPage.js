@@ -19,13 +19,20 @@ class ClientReviewPage extends Component {
             isError: false,
             selectRowId: '',
             deleteBtnText: 'Delete',
-            addModal: false
+            addModal: false,
+            client_name: '',
+            client_comment: '',
+            client_image: '',
+            editModal: false
         }
 
         this.deleteRow = this.deleteRow.bind(this)
         this.addModalToggle = this.addModalToggle.bind(this)
         this.addClientReviewButtonClick = this.addClientReviewButtonClick.bind(this)
         this.addClientReview = this.addClientReview.bind(this)
+        this.editRow = this.addClientReview.bind(this)
+        this.editClientReview = this.editClientReview.bind(this)
+        this.editModalToggle = this.editModalToggle.bind(this)
     }
 
     componentDidMount() {
@@ -101,7 +108,7 @@ class ClientReviewPage extends Component {
             client_image: clientImg
         }).then((response) => {
             if(response.status == 200 && response.data == 1) {
-                Swal.fire('Service Added Successfully !');
+                Swal.fire('Client Review Added Successfully !');
                 this.addModalToggle();
                 this.componentDidMount();
             } else {
@@ -111,6 +118,60 @@ class ClientReviewPage extends Component {
         }).catch((error) => {
             Swal.fire('Something Went Wrong !');
             this.addModalToggle();
+        })
+    }
+
+    // Edit client review functions
+    editModalToggle() {
+        if(this.state.selectRowId == '') {
+            return Swal.fire('Please select a row for Update!')
+        } else {
+            if(this.state.editModal == false) {
+                this.setState({editModal: true});
+                Axios.post('/clientReviewEditDetails', {id:this.state.selectRowId}).then((response) => {
+                    if(response.status == 200) {
+                        this.setState({
+                            client_name: response.data[0]['client_name'],
+                            client_comment: response.data[0]['client_comment'],
+                            client_image: response.data[0]['client_image']
+                        });
+                    } else {
+                        Swal.fire('Something Went Wrong !');
+                    }
+                }).catch((error) => {
+                    Swal.fire('Something Went Wrong !');
+                })
+            } else {
+                this.setState({
+                    editModal: false
+                });
+            }
+        }
+    }
+
+    editRow() {
+        const id = this.state.selectRowId
+        const clientName = this.state.client_name
+        const clientComment = this.state.client_comment
+        const clientImg = this.state.client_image
+
+        this.editClientReview(id, clientName, clientComment, clientImg)
+    }
+
+    editClientReview(id, clientName, clientComment, clientImg) {
+        Axios.post('/editClientReview', {
+            id: id,
+            client_name: clientName,
+            client_comment: clientComment,
+            client_image: clientImg,
+        }).then((response) => {
+            if(response.status == 200) {
+                Swal.fire('Client Review Added Successfully !')
+            } else {
+                Swal.fire('Something Went Wrong !')
+            }
+        }).catch((error) => {
+            alert('Something Went Wrong');
         })
     }
 
@@ -142,7 +203,7 @@ class ClientReviewPage extends Component {
 
             const selectRow = {
                 mode: "radio",
-                onSelect: (row, isSelect, rowIndex) => {
+                onSelect: (row) => {
                     this.setState({selectRowId: row['id']})
                 }
             }
@@ -179,10 +240,10 @@ class ClientReviewPage extends Component {
                             </Row>
                         </Container>
 
-                        {/*client review add modal*/}
+                        {/*Client review add modal*/}
                         <MDBContainer>
                             <MDBModal isOpen={this.state.addModal} toggle={this.addModalToggle} size="lg">
-                                <MDBModalHeader toggle={this.addModalToggle}>Add Project</MDBModalHeader>
+                                <MDBModalHeader toggle={this.addModalToggle}>Add Client Review</MDBModalHeader>
                                 <MDBModalBody>
                                     <Row>
                                         <Col md={6} sm={6} lg={6}>
@@ -199,6 +260,30 @@ class ClientReviewPage extends Component {
                                 <MDBModalFooter>
                                     <MDBBtn color="primary" size="sm" onClick={this.addClientReviewButtonClick}>Add</MDBBtn>
                                     <MDBBtn color="danger" size="sm" onClick={this.addModalToggle}>Close</MDBBtn>
+                                </MDBModalFooter>
+                            </MDBModal>
+                        </MDBContainer>
+
+                        {/*Client review edit modal*/}
+                        <MDBContainer>
+                            <MDBModal isOpen={this.state.editModal} toggle={this.editModalToggle} size="lg">
+                                <MDBModalHeader toggle={this.editModalToggle}>Edit Client Review</MDBModalHeader>
+                                <MDBModalBody>
+                                    <Row>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput label="Client Name" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" value={ this.state.client_name } onChange={e => this.setState({ client_name: e.target.value })}/>
+                                            <MDBInput label="Client Image" icon="envelope" group type="text" validate error="wrong"
+                                                      success="right" value={ this.state.client_image } onChange={e => this.setState({ client_image: e.target.value })}/>
+                                        </Col>
+                                        <Col md={6} sm={6} lg={6}>
+                                            <MDBInput type="textarea" label="Client Description" rows="4" value={ this.state.client_comment } onChange={e => this.setState({ client_comment: e.target.value })}/>
+                                        </Col>
+                                    </Row>
+                                </MDBModalBody>
+                                <MDBModalFooter>
+                                    <MDBBtn color="primary" size="sm" onClick={this.editRow}>Update</MDBBtn>
+                                    <MDBBtn color="danger" size="sm" onClick={this.editModalToggle}>Close</MDBBtn>
                                 </MDBModalFooter>
                             </MDBModal>
                         </MDBContainer>
