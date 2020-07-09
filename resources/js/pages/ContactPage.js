@@ -110,7 +110,7 @@ class ContactPage extends Component {
                         <Container>
                             <Row>
                                 <Col md={4} lg={4} sm={4}>
-                                    <Button className="btn btn-dark mt-5" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
+                                    <Button className="btn btn-danger mt-5 btn-sm" onClick={this.deleteRow}>{ this.state.deleteBtnText }</Button>
                                 </Col>
                                 <Col md={4} lg={4} sm={4}>
                                     <h1 className=" text-center titleText mt-5">Contact Information</h1>

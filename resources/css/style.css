@@ -129,4 +129,18 @@ body {
     font-family: 'Jost', sans-serif;
 }
 
+.errorMsg {
+    margin-bottom: 1rem;
+    background: red !important;
+    color: white;
+    padding: 10px;
+    font-size: 14px;
+}
 
+.loginPage {
+    font-family: 'Jost', sans-serif !important;
+}
+
+.loginRow {
+    margin-top: 8rem !important;
+}
